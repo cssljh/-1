@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>슬기로운 디지털 시민성 퀴즈 (초등 6학년)</title>
+  <meta name="description" content="초등학교 6학년 학생들을 위한 안전하고 재미있는 디지털 시민성 10문항 퀴즈입니다. 개인정보 없이 완전 익명으로 참여할 수 있습니다.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+            heading: ['Jua', 'Pretendard', 'sans-serif']
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- 웹 폰트 (Pretendard & Jua) -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 아이콘 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Canvas Confetti CDN (축하 폭죽 효과) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f8fafc;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+    .font-jua {
+      font-family: 'Jua', sans-serif;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- ========================================== -->
+  <!-- 1. 상단 네비게이션 헤더 -->
+  <!-- ========================================== -->
+  <header class="bg-white/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-4xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center shadow-md shadow-indigo-200">
+          <i class="fa-solid fa-shield-cat text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold text-indigo-600 tracking-wider block leading-tight">초등 6학년 디지털 시민성</span>
+          <h1 class="text-base sm:text-lg font-black text-slate-900 leading-tight">슬기로운 디지털 탐험대</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- 소리 켜기/끄기 토글 버튼 -->
+        <button onclick="toggleSound()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200/80 text-slate-700 flex items-center justify-center transition-all" title="효과음 켜기/끄기" aria-label="효과음 토글">
+          <i id="sound-icon" class="fa-solid fa-volume-high text-indigo-600"></i>
+        </button>
+
+        <!-- 선생님 연동 설정 버튼 -->
+        <button onclick="openSettingsModal()" class="px-3 sm:px-3.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100/80 text-indigo-700 font-bold text-xs sm:text-sm flex items-center gap-1.5 transition-all border border-indigo-200/60" title="구글 스프레드시트 연동 설정">
+          <i class="fa-solid fa-gear"></i>
+          <span class="hidden sm:inline">선생님 연동 설정</span>
+          <span class="sm:hidden">설정</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. 메인 컨테이너 영역 -->
+  <!-- ========================================== -->
+  <main class="max-w-3xl mx-auto px-4 py-6 sm:py-8 flex-1 w-full">
+
+    <!-- ---------------------------------------- -->
+    <!-- [화면 1] 인트로 시작 화면 -->
+    <!-- ---------------------------------------- -->
+    <section id="screen-intro" class="animate-fade-in space-y-6">
+      
+      <!-- 히어로 카드 -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xl shadow-indigo-100/40 relative overflow-hidden text-center">
+        <!-- 배경 장식 원형 -->
+        <div class="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 opacity-60 -z-0"></div>
+        <div class="absolute -left-16 -bottom-16 w-48 h-48 rounded-full bg-gradient-to-tr from-sky-100 to-emerald-100 opacity-60 -z-0"></div>
+
+        <div class="relative z-10 max-w-xl mx-auto">
+          <!-- 상단 뱃지 -->
+          <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs sm:text-sm font-extrabold mb-4">
+            <i class="fa-solid fa-sparkles text-amber-500"></i>
+            <span>도전! 디지털 시민성 퀴즈 10문항</span>
+          </div>
+
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 leading-tight mb-3 font-jua">
+            우리는 안전하고 멋진<br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">디지털 히어로! 🚀</span>
+          </h2>
+
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+            스마트폰과 인터넷 세상에서 나와 친구를 지키는 법!<br>
+            초등학교 6학년에게 꼭 필요한 10가지 디지털 수칙을 퀴즈로 재미있게 확인해 보세요.
+          </p>
+
+          <!-- 완전 익명 보장 알림 박스 -->
+          <div class="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4 mb-6 text-left flex items-start gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+              <i class="fa-solid fa-lock"></i>
+            </div>
+            <div class="text-xs sm:text-sm text-emerald-900 leading-relaxed">
+              <span class="font-bold text-emerald-950 block mb-0.5">100% 완전 익명 보장 (개인정보 수집 안 함)</span>
+              이름, 생년월일, 전화번호 등 어떠한 개인정보도 묻거나 저장하지 않습니다. 오직 재미있고 안전한 배움만 함께합니다!
+            </div>
+          </div>
+
+          <!-- 익명 동물 별명 발급 카드 -->
+          <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5 mb-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div>
+              <span class="text-xs font-semibold text-slate-500 block">오늘 나의 탐험가 익명 별명</span>
+              <div id="anonymous-nickname-badge" class="flex items-center justify-center sm:justify-start gap-1.5 mt-0.5 text-base sm:text-lg">
+                <!-- JS에서 동적 주입 -->
+              </div>
+            </div>
+            <button onclick="updateNicknameUI()" type="button" class="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200 shadow-2xs transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-dice text-indigo-500"></i>
+              <span>별명 다시 뽑기</span>
+            </button>
+          </div>
+
+          <!-- 퀴즈 시작 버튼 -->
+          <button onclick="startQuiz()" type="button" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-extrabold text-lg sm:text-xl shadow-xl shadow-indigo-300/50 hover:shadow-2xl transition-all duration-200 active:scale-95 flex items-center justify-center gap-2.5 mx-auto group">
+            <span>퀴즈 시작하기 (총 10문항)</span>
+            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 퀴즈 주제 안내 뱃지 그리드 -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm">
+        <h3 class="text-sm font-bold text-slate-500 mb-3.5 flex items-center gap-2">
+          <i class="fa-solid fa-bookmark text-indigo-500"></i>
+          <span>오늘 다루는 10가지 디지털 시민성 핵심 주제</span>
+        </h3>
+        <div class="flex flex-wrap gap-2 text-xs font-semibold">
+          <span class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200">👣 디지털 발자국</span>
+          <span class="px-3 py-1.5 rounded-xl bg-rose-50 text-rose-800 border border-rose-200">🛡️ 사이버 폭력 예방</span>
+          <span class="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-800 border border-blue-200">🔍 팩트체크 리터러시</span>
+          <span class="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200">©️ 저작권 및 출처 표기</span>
+          <span class="px-3 py-1.5 rounded-xl bg-purple-50 text-purple-800 border border-purple-200">🤖 생성형 AI 윤리</span>
+          <span class="px-3 py-1.5 rounded-xl bg-red-50 text-red-800 border border-red-200">⚠️ 스미싱 & 사기 예방</span>
+          <span class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200">🌿 디지털 웰빙 과몰입</span>
+          <span class="px-3 py-1.5 rounded-xl bg-teal-50 text-teal-800 border border-teal-200">🤝 온라인 그루밍 주의</span>
+          <span class="px-3 py-1.5 rounded-xl bg-sky-50 text-sky-800 border border-sky-200">💬 고운말 네티켓</span>
+          <span class="px-3 py-1.5 rounded-xl bg-violet-50 text-violet-800 border border-violet-200">🔑 계정 보안 2단계 인증</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------------------------------- -->
+    <!-- [화면 2] 퀴즈 풀이 화면 -->
+    <!-- ---------------------------------------- -->
+    <section id="screen-quiz" class="hidden animate-fade-in space-y-5">
+      
+      <!-- 상단 진행도 및 주제 바 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm">
+        <div class="flex items-center justify-between mb-2.5">
+          <div id="quiz-topic-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border">
+            <!-- 주제 배지 동적 주입 -->
+          </div>
+          <span id="quiz-progress-text" class="text-xs sm:text-sm font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">
+            문항 1 / 10
+          </span>
+        </div>
+
+        <!-- 프로그레스 게이지 바 -->
+        <div class="w-full h-3 rounded-full bg-slate-100 overflow-hidden">
+          <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-violet-600 rounded-full transition-all duration-300" style="width: 10%;"></div>
+        </div>
+      </div>
+
+      <!-- 문제 카드 -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xl shadow-slate-100">
+        
+        <!-- 문제 본문 -->
+        <h3 id="quiz-question-title" class="text-lg sm:text-2xl font-bold text-slate-900 leading-snug mb-6 sm:mb-8">
+          <!-- 문제 내용 동적 주입 -->
+        </h3>
+
+        <!-- 4지선다 보기 목록 -->
+        <div id="quiz-options-container" class="space-y-3 sm:space-y-3.5">
+          <!-- 보기 버튼들 동적 주입 -->
+        </div>
+
+        <!-- 즉각적인 정오답 피드백 및 친절 해설 영역 -->
+        <div id="quiz-feedback-box" class="hidden">
+          <!-- 정답/오답 및 상세 해설 동적 주입 -->
+        </div>
+
+        <!-- 다음 문제로 이동 버튼 -->
+        <div class="mt-6">
+          <button id="quiz-next-btn" onclick="handleNextQuestion()" type="button" class="hidden">
+            <!-- 다음 문제 / 결과 보기 동적 변경 -->
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------------------------------------- -->
+    <!-- [화면 3] 결과 확인 및 오답 복습 화면 -->
+    <!-- ---------------------------------------- -->
+    <section id="screen-result" class="hidden animate-fade-in space-y-6">
+
+      <!-- 종합 성적 및 칭찬 히어로 카드 -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xl shadow-indigo-100/50 text-center relative overflow-hidden">
+        
+        <!-- 상단 축하 뱃지 -->
+        <div id="result-badge-card" class="mb-4">
+          <!-- 배지 동적 주입 -->
+        </div>
+
+        <!-- 익명 닉네임 확인 -->
+        <p class="text-xs sm:text-sm text-slate-500 font-medium mb-2">
+          탐험가: <strong id="result-student-nickname" class="text-indigo-600">지혜로운 올빼미 #123</strong>
+        </p>
+
+        <!-- 점수 표시 -->
+        <div class="my-4 flex items-baseline justify-center">
+          <span id="result-score-number" class="text-5xl sm:text-7xl font-black text-indigo-600 font-jua">0</span>
+          <span id="result-score-total" class="text-2xl sm:text-4xl font-extrabold text-slate-400 font-jua ml-1"> / 10점</span>
+          <span id="result-score-percent" class="ml-3 px-3 py-1 rounded-xl bg-indigo-50 text-indigo-700 text-sm sm:text-base font-extrabold align-middle">0점</span>
+        </div>
+
+        <!-- 칭찬 메시지 -->
+        <h3 id="result-praise-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2 font-jua">
+          참 잘했어요!
+        </h3>
+        <p id="result-praise-desc" class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto leading-relaxed mb-6">
+          디지털 안전 수칙을 성실하게 풀었습니다.
+        </p>
+
+        <!-- 구글 스프레드시트 자동 전송 상태 바 -->
+        <div id="gas-status-banner" class="max-w-xl mx-auto mb-6">
+          <!-- 전송 결과 동적 알림 -->
+        </div>
+
+        <!-- 다시 풀기 버튼 -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button onclick="startQuiz()" type="button" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>퀴즈 다시 풀기</span>
+          </button>
+          <a href="#result-review-section" class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-list-check"></i>
+            <span>오답 및 해설 복습하기</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 오답 및 전체 해설 복습 섹션 -->
+      <div id="result-review-section" class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+          <div>
+            <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+              <i class="fa-solid fa-book-bookmark text-indigo-600"></i>
+              <span>내가 푼 10문항 정답 & 해설 다시보기</span>
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">내가 선택한 답과 정답, 그리고 친절한 해설을 꼼꼼히 확인해 보세요.</p>
+          </div>
+
+          <!-- 복습 필터 탭 -->
+          <div class="flex items-center gap-1.5 p-1 bg-slate-100 rounded-2xl self-start sm:self-auto">
+            <button id="tab-review-all" onclick="renderReviewList('all')" type="button" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-indigo-600 text-white shadow-xs">
+              전체 보기 (10)
+            </button>
+            <button id="tab-review-wrong" onclick="renderReviewList('wrong')" type="button" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-transparent text-slate-600 hover:bg-slate-200">
+              내가 틀린 문제
+            </button>
+          </div>
+        </div>
+
+        <!-- 동적으로 주입되는 복습 카드 컨테이너 -->
+        <div id="result-review-container" class="space-y-4 pt-2">
+          <!-- JS에서 동적 주입 -->
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. 하단 푸터 영역 -->
+  <!-- ========================================== -->
+  <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-3xl mx-auto space-y-1.5">
+      <p class="font-medium">
+        🌱 <strong class="text-slate-700">사람 중심 디지털 교육</strong> | 초등학교 6학년을 위한 디지털 시민성 퀴즈
+      </p>
+      <p class="text-slate-400">
+        본 사이트는 학생의 개인정보(이름, 생년월일, 연락처 등)를 절대 수집하거나 저장하지 않습니다.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 4. [모달] 선생님 구글 스프레드시트 연동 설정 -->
+  <!-- ========================================== -->
+  <div id="modal-settings" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
+      
+      <!-- 모달 헤더 -->
+      <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-table-cells text-lg"></i>
+          <h4 class="font-bold text-base sm:text-lg">선생님 구글 스프레드시트 연동 설정</h4>
+        </div>
+        <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- 모달 바디 -->
+      <div class="p-6 space-y-4 text-sm text-slate-700">
+        <p class="text-xs sm:text-sm leading-relaxed text-slate-600">
+          학생들이 퀴즈를 완료했을 때 <strong class="text-indigo-600">개인정보는 제외</strong>하고 <strong class="text-slate-900">[제출 시각, 익명 별명, 총점, 1~10번 정오답]</strong>만 선생님의 구글 스프레드시트로 자동 전송할 수 있습니다.
+        </p>
+
+        <div>
+          <label for="gas-url-input" class="block font-bold text-slate-800 text-xs sm:text-sm mb-1.5">
+            구글 앱스 스크립트(GAS) 웹 앱 URL:
+          </label>
+          <input 
+            type="url" 
+            id="gas-url-input" 
+            placeholder="https://script.google.com/macros/s/.../exec"
+            class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-xs sm:text-sm bg-slate-50"
+          >
+          <p class="text-xs text-slate-500 mt-1">
+            * 구글 스프레드시트에서 [확장 프로그램] → [Apps Script]로 배포한 Web App URL을 붙여넣으세요.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-1">
+          <span class="font-bold block">💡 Apps Script 배포 시 필수 체크 사항:</span>
+          <p>• 다음 사용자 권한으로 실행: <strong>'나(내 계정)'</strong></p>
+          <p>• 액세스 권한이 있는 사용자: <strong>'모든 사용자(Anyone)'</strong>로 설정해야 학생 기기에서 정상 전송됩니다.</p>
+        </div>
+      </div>
+
+      <!-- 모달 푸터 -->
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2.5">
+        <button onclick="closeSettingsModal()" type="button" class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs sm:text-sm border border-slate-200">
+          취소
+        </button>
+        <button onclick="saveSettings()" type="button" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm shadow-sm transition-all">
+          저장하기
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 5. 스크립트 파일 로드 (문항 데이터 및 퀴즈 로직) -->
+  <!-- ========================================== -->
+  <script src="questions.js"></script>
+  <script src="submit.js"></script>
+
+</body>
+</html>
